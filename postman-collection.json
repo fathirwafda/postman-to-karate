@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "e519c3c2-3332-4722-8748-7bc0eb31ea64",
+		"name": "hackday_demos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32476075",
+		"_collection_link": "https://frankiefinancial.postman.co/workspace/FW~bddfdab6-1b50-4c7c-8115-a4f2cc46ce9f/collection/32476075-e519c3c2-3332-4722-8748-7bc0eb31ea64?action=share&source=collection_link&creator=32476075"
+	},
+	"item": [
+		{
+			"name": "Create Organization Profile International Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json()",
+							"",
+							"const entityId = jsonData.organization.entityId",
+							"console.log(\"This is organisation entityId:\", entityId)",
+							"",
+							"pm.test(\"test entityId is present\",() => {",
+							"    pm.expect(jsonData.organization.entityId).to.have.length.greaterThan(1);",
+							"    pm.expect(jsonData.organization.entityId).to.not.null;",
+							"    pm.expect(jsonData.organization.entityId).equal(pm.collectionVariables.get(\"orgEntityId\"));",
+							"})",
+							"",
+							"pm.test(\"Content-Type header is present in requestbody\", () => {",
+							"    pm.request.to.have.header(\"Content-Type\");",
+							"    pm.expect(pm.request.headers.get('Content-Type')).equal('application/json');",
+							"})",
+							"",
+							"pm.test(\"Verify reportName is present\", () => {",
+							"    pm.expect(jsonData.reportName).to.be.oneOf([\"internationalReport\"]);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Frankie-CustomerID",
+						"value": "{{customer_id}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Frankie-CustomerChildID",
+						"value": "{{child_customer_id}}",
+						"type": "text"
+					},
+					{
+						"key": "api_key",
+						"value": "{{api_key}}",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "X-Frankie-RequestID",
+						"value": "{{$guid}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"reportName\": \"internationalReport\",\r\n  \"organization\": {},\r\n  \"ibpr\": {\r\n    \"CompanyProfile\" : {\r\n      \"Addresses\" : {\r\n        \"Addresses\" : [\r\n          {\r\n            \"AddressInOneLine\" : \"1601 WILLOW ROAD, MENLO PARK CA 94025\",\r\n            \"Type\" : \"Entity Address (since 2001-02-03)\"\r\n          },\r\n          {\r\n            \"AddressInOneLine\" : \"1601 WILLOW ROAD\",\r\n            \"Type\" : \"Mailing Address (from 03-02-2001)\"\r\n          }\r\n        ]\r\n      },\r\n      \"AgentName\" : \"CORPORATION SERVICE COMPANY WHICH WILL DO BUSINESS IN CALIFORNIA AS CSC - LAWYERS INCORPORATING SERVICE (C1592199)\",\r\n      \"Code\" : \"C2711108\",\r\n      \"Date\" : \"11/19/2020 01:59 PM\",\r\n      \"FoundationDate\" : \"12/15/2004\",\r\n      \"LegalForm\" : \"Corporation - FOREIGN STOCK\",\r\n      \"LegalStatus\" : \"ACTIVE\",\r\n      \"Name\" : \"FACEBOOK, INC.\",\r\n      \"RegistrationAuthority\" : \"Secretary of State of California\",\r\n      \"StateOfIncorporation\" : \"DELAWARE\"\r\n    },\r\n    \"checkId\" : \"6fec40ae-1d6d-404c-a272-eaa9bfdad40d\",\r\n    \"entityId\" : \"{{orgEntityId}}\",\r\n    \"ibResponseCode\" : 100,\r\n    \"ibResponseDetails\" : \"bar\",\r\n    \"ibRetrievalLocation\" : \"https://data.kyckr.com/integration/1128898207\",\r\n    \"ibTransactionId\" : \"baz\",\r\n    \"requestId\" : \"01H0F16ZZXV5HWQQJH8SMDS72G\"\r\n  },\r\n  \"check\": {\r\n    \"checkId\": \"6fec40ae-1d6d-404c-a272-eaa9bfdad40d\",\r\n    \"checkType\": \"internationalReport\",\r\n    \"checkPerformedBy\": \"kyckr\",\r\n    \"checkDate\": \"2023-04-03T05:15:00.000Z\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/organizations/{{orgEntityId}}/profiles/international",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"organizations",
+						"{{orgEntityId}}",
+						"profiles",
+						"international"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateIndividual",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Frankie-CustomerID",
+						"value": "{{customer_id}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Frankie-RequestID",
+						"value": "{{$randomUUID}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Frankie-CustomerChildID",
+						"value": "{{child_customer_id}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"schemaVersion\": 2,\n  \"addresses\": [\n    {\n      \"type\": \"home\",\n      \"typeDescription\": \"Home Address\",\n      \"format\": \"standard\",\n      \"validFrom\": {\n        \"day\": \"01\",\n        \"month\": \"01\",\n        \"year\": \"2020\",\n        \"type\": \"GREGORIAN\"\n      },\n      \"validTo\": {\n        \"day\": \"31\",\n        \"month\": \"12\",\n        \"year\": \"2023\",\n        \"type\": \"GREGORIAN\"\n      },\n      \"longForm\": \"124 Queen Street\",\n      \"streetName\": \"Queen Street\",\n      \"streetNumber\": \"124\",\n      \"streetType\": \"Street\",\n      \"neighborhood\": \"Mel CBD\",\n      \"locality\": \"Melbourne\",\n      \"district\": \"VIC\",\n      \"country\": \"AUS\",\n      \"postalCode\": \"3000\",\n      \"status\": \"active\"\n    }\n  ],\n  \"phoneNumbers\": [\n    {\n      \"isPreferred\": true,\n      \"type\": \"HOME\",\n      \"country\": \"AUS\",\n      \"number\": \"+6139087890\"\n    }\n  ],\n  \"emailAddresses\": [\n    {\n      \"type\": \"WORK\",\n      \"email\": \"john@test3.com\",\n      \"isPreferred\": true\n    },\n    {\n      \"type\": \"PERSONAL\",\n      \"email\": \"john@personaltest1.com\",\n      \"isPreferred\": false\n    }\n  ],\n  \"internalExtraData\": {\n    \"note1\": {\n      \"type\": \"testing by hn\",\n      \"value\": \"custom Value 1 test\"\n    },\n    \"note.system\": {\n      \"type\": \"90900988\",\n      \"value\": \"custom Value 2 test\"\n    }\n  },\n  \"name\": {\n    \"language\": \"EN\",\n    \"givenName\": \"Fathir\",\n    \"middleName\": \"\",\n    \"familyName\": \"Wafda\",\n    \"otherName\": \"Fathir\",\n    \"prefix\": \"Mr\",\n    \"displayName\": \"FW\",\n    \"type\": \"PRIMARY\"\n  },\n  \"dateOfBirth\": {\n    \"normalized\": \"1994-05-15\",\n    \"year\": \"1994\",\n    \"month\": \"05\",\n    \"day\": \"15\",\n    \"type\": \"GREGORIAN\",\n    \"longForm\": \"May 15, 1994\"\n  },\n  \"gender\": {\n    \"gender\": \"male\",\n    \"type\": \"primary\"\n  },\n  \"nationality\": \"AUS\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v2/individuals",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v2",
+						"individuals"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
